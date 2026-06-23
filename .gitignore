@@ -1,0 +1,14 @@
+.idea/
+*.iml
+
+# Node.js / Angular
+**/node_modules/
+**/dist/
+**/npm-debug.log
+
+target/
+build/
+.gradle/
+*.class
+
+.DS_Store
