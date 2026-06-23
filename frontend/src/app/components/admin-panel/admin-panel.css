@@ -1,0 +1,59 @@
+/* Layout */
+.admin-wrap { display: flex; min-height: 100vh; font-size: 0.88rem; }
+
+/* Sidebar */
+.admin-sidebar { width: 200px; min-width: 200px; background: #1a1a2e; color: #fff; display: flex; flex-direction: column; }
+.sidebar-logo { padding: 20px 16px; font-size: 1rem; font-weight: 700; border-bottom: 1px solid #2e2e50; letter-spacing: .5px; }
+.sidebar-nav { display: flex; flex-direction: column; padding: 8px 0; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: none; border: none; color: #bbb; font-size: 0.9rem; cursor: pointer; text-align: left; transition: background .15s, color .15s; }
+.nav-item:hover { background: #2e2e50; color: #fff; }
+.nav-item.active { background: #f57c00; color: #fff; font-weight: 600; }
+.nav-icon { font-size: 1rem; }
+
+/* Main */
+.admin-main { flex: 1; padding: 24px 28px; background: #f5f6fa; overflow-x: auto; }
+.section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: #1a1a2e; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-header .section-title { margin-bottom: 0; }
+.count { font-size: 0.85rem; font-weight: 400; color: #888; }
+
+/* Error / Loading */
+.admin-error { background: #fce4ec; color: #c62828; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; }
+.admin-loading { text-align: center; padding: 60px; color: #888; font-size: 1rem; }
+
+/* Table */
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+table { width: 100%; border-collapse: collapse; }
+th { background: #f0f0f5; font-weight: 600; color: #333; padding: 11px 14px; text-align: left; white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafafa; }
+.row-blocked td { background: #fff8f8 !important; }
+
+/* Badges */
+.badge { padding: 3px 9px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+.badge-approved  { background: #d1e7dd; color: #155724; }
+.badge-pending   { background: #fff3cd; color: #856404; }
+.badge-rejected  { background: #f8d7da; color: #842029; }
+.badge-confirmed { background: #cce5ff; color: #004085; }
+.badge-shipped   { background: #d1ecf1; color: #0c5460; }
+.badge-delivered { background: #d4edda; color: #155724; }
+.badge-cancelled { background: #e2e3e5; color: #383d41; }
+.badge-admin     { background: #1a1a2e; color: #fff; }
+.badge-user      { background: #e0e0e0; color: #333; }
+
+/* Action buttons */
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-sm { padding: 5px 12px; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.btn-success { background: #d1e7dd; color: #155724; }
+.btn-success:hover { background: #badbcc; }
+.btn-warn    { background: #fff3cd; color: #856404; }
+.btn-warn:hover { background: #ffe69c; }
+.btn-danger  { background: #f8d7da; color: #842029; }
+.btn-danger:hover { background: #f5c2c7; }
+
+/* Status select */
+.status-select { border: 1px solid #ddd; border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; background: #fafafa; cursor: pointer; }
+
+/* Long message cell */
+.msg-cell { max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

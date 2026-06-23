@@ -1,0 +1,144 @@
+<div class="co-page">
+
+  <!-- ── Confirmed view ── -->
+  @if (state() === 'confirmed' && confirmedOrder(); as order) {
+    <div class="co-confirmed animate-in">
+
+      <div class="co-confirmed-hero">
+        <div class="co-confirmed-check">✓</div>
+        <div>
+          <h1 class="co-confirmed-title">Order Confirmed!</h1>
+          <p class="co-confirmed-sub">
+            Thank you! Your order has been placed and is being processed.
+          </p>
+        </div>
+      </div>
+
+      <div class="co-confirmed-card">
+
+        <!-- Order meta -->
+        <div class="co-meta-row">
+          <div class="co-meta-cell">
+            <span class="co-meta-label">Order ID</span>
+            <span class="co-meta-value">#{{ order.id }}</span>
+          </div>
+          <div class="co-meta-cell">
+            <span class="co-meta-label">Status</span>
+            <span class="co-status-badge co-status-badge--{{ order.status.toLowerCase() }}">
+              {{ statusLabel(order.status) }}
+            </span>
+          </div>
+          <div class="co-meta-cell">
+            <span class="co-meta-label">Date</span>
+            <span class="co-meta-value">{{ order.createdAt | date:'mediumDate' }}</span>
+          </div>
+        </div>
+
+        <div class="co-divider"></div>
+
+        <!-- Items -->
+        <div class="co-items-list">
+          @for (item of order.items; track item.productId) {
+            <div class="co-item-row">
+              <span class="co-item-name">{{ nameFor(item.productId) }}</span>
+              <span class="co-item-qty">× {{ item.quantity }}</span>
+              <span class="co-item-price">{{ item.price * item.quantity | currency }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="co-divider"></div>
+
+        <div class="co-total-row">
+          <span>Total charged</span>
+          <span class="co-total-amount">{{ order.totalPrice | currency }}</span>
+        </div>
+
+      </div>
+
+      <div class="co-confirmed-actions">
+        <a class="co-btn co-btn--secondary" routerLink="/mall">Continue Shopping</a>
+        <a class="co-btn co-btn--primary" routerLink="/orders">View My Orders</a>
+      </div>
+
+    </div>
+
+  } @else {
+
+    <h1 class="co-title">Checkout</h1>
+
+    <!-- ── Empty cart guard ── -->
+    @if (items().length === 0) {
+      <div class="co-empty animate-in">
+        <p>Your cart is empty.</p>
+        <a routerLink="/mall" class="co-btn co-btn--primary">Go Shopping</a>
+      </div>
+
+    } @else {
+
+      <div class="co-layout">
+
+        <!-- Left: order review -->
+        <div class="co-review">
+          <h2 class="co-section-title">Order Review</h2>
+          <div class="co-review-items">
+            @for (item of items(); track item.productId) {
+              <div class="co-review-item">
+                @if (item.imageUrl) {
+                  <img class="co-ri-img" [src]="item.imageUrl" [alt]="item.name"
+                       (error)="$any($event.target).style.display='none'" />
+                }
+                <div class="co-ri-info">
+                  <p class="co-ri-name">{{ item.name }}</p>
+                  <p class="co-ri-qty">Qty: {{ item.quantity }}</p>
+                </div>
+                <span class="co-ri-price">{{ item.price * item.quantity | currency }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Right: action card -->
+        <aside class="co-action-card">
+          <h2 class="co-section-title">Place Your Order</h2>
+
+          <div class="co-summary-rows">
+            <div class="co-sum-row">
+              <span>Items ({{ items().length }})</span>
+              <span>{{ total() | currency }}</span>
+            </div>
+            <div class="co-sum-row">
+              <span>Shipping</span>
+              <span class="co-free">Free</span>
+            </div>
+          </div>
+          <div class="co-divider"></div>
+          <div class="co-sum-row co-sum-row--total">
+            <span>Order Total</span>
+            <span>{{ total() | currency }}</span>
+          </div>
+
+          @if (error()) {
+            <div class="co-error animate-in">⚠ {{ error() }}</div>
+          }
+
+          <button class="co-place-btn"
+                  [disabled]="state() === 'loading'"
+                  (click)="placeOrder()">
+            @if (state() === 'loading') {
+              <span class="btn-spinner"></span>
+              Placing order…
+            } @else {
+              Place Order →
+            }
+          </button>
+
+          <p class="co-legal">
+            By placing this order you agree to our terms of service.
+          </p>
+        </aside>
+
+      </div>
+    }
+  }
+</div>

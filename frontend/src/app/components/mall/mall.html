@@ -1,0 +1,169 @@
+@if (cartToast()) {
+  <div class="cart-toast animate-in">{{ cartToast() }}</div>
+}
+
+<div class="marketplace">
+
+  <!-- ── Body: sidebar + main ── -->
+  <div class="mp-body">
+
+    <!-- Mobile sidebar backdrop -->
+    @if (sidebarOpen()) {
+      <div class="sidebar-backdrop" (click)="closeSidebar()"></div>
+    }
+
+    <!-- Left sidebar -->
+    <aside class="mp-sidebar" [class.mp-sidebar--open]="sidebarOpen()">
+      <div class="sidebar-head">
+        <span>Categories</span>
+        <button class="sidebar-close-btn" (click)="closeSidebar()">✕</button>
+      </div>
+      <ul class="sidebar-list">
+        @for (cat of sidebarCategories; track cat.label) {
+          <li>
+            <a class="sidebar-item"
+               [class.sidebar-item--active]="activeCategory() === cat.value && cat.value !== null"
+               routerLink="/mall"
+               [queryParams]="cat.value ? { category: cat.value } : {}"
+               (click)="closeSidebar()">
+              <span class="si-icon">{{ cat.icon }}</span>
+              <span class="si-label">{{ cat.label }}</span>
+              @if (cat.badge) {
+                <span class="si-new">{{ cat.badge }}</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="mp-main">
+
+      <!-- Page title row -->
+      <div class="mp-title-row">
+        <button class="mp-sidebar-toggle" (click)="toggleSidebar()" aria-label="Toggle categories">
+          ☰
+        </button>
+        <h1 class="mp-title">{{ pageTitle() }}</h1>
+        @if (!loading() && !error() && products().length > 0) {
+          <span class="mp-total">{{ products().length }} items</span>
+        }
+      </div>
+
+      <!-- Loading skeleton grid -->
+      @if (loading()) {
+        <div class="mp-grid">
+          @for (n of skeletons; track n) {
+            <div class="pc pc--skeleton">
+              <div class="sk-img"></div>
+              <div class="sk-body">
+                <div class="sk-line sk-w65"></div>
+                <div class="sk-line sk-w45 sk-sm"></div>
+                <div class="sk-line sk-w55 sk-sm"></div>
+                <div class="sk-btn"></div>
+              </div>
+            </div>
+          }
+        </div>
+
+      <!-- Error state -->
+      } @else if (error()) {
+        <div class="mp-state">
+          <div class="mp-state-icon">⚠️</div>
+          <h3>Something went wrong</h3>
+          <p>{{ error() }}</p>
+          <a routerLink="/login" class="mp-state-btn">Sign in and try again</a>
+        </div>
+
+      <!-- Empty state -->
+      } @else if (products().length === 0) {
+        <div class="mp-state">
+          <div class="mp-state-icon">🔍</div>
+          <h3>No products found</h3>
+          <p>Try a different search or browse another category.</p>
+          <a routerLink="/mall" class="mp-state-btn">View all products</a>
+        </div>
+
+      <!-- Product grid -->
+      } @else {
+        <div class="mp-grid">
+          @for (product of products(); track product.id) {
+            <div class="pc" [routerLink]="['/products', product.id]" style="cursor:pointer">
+
+              <!-- Image area -->
+              <div class="pc-img-wrap">
+                <img class="pc-img"
+                     [src]="product.imageUrls?.[0] ?? ''"
+                     [alt]="product.name"
+                     (error)="onImageError($event)" />
+                <div class="pc-img-ph">{{ product.name[0].toUpperCase() }}</div>
+
+                <!-- Discount badge — top-left -->
+                @if (product.discount > 0) {
+                  <span class="pc-discount">-{{ product.discount }}%</span>
+                }
+
+                <!-- Promo tag — below discount badge -->
+                @if (product.promoTag) {
+                  <span class="pc-promo" [class.pc-promo--offset]="product.discount > 0">
+                    {{ product.promoTag }}
+                  </span>
+                }
+
+                <!-- Wishlist heart — top-right -->
+                <button class="pc-heart"
+                        [class.pc-heart--active]="wishlist().has(product.id)"
+                        (click)="toggleWishlist(product.id, $event)"
+                        aria-label="Add to wishlist">
+                  {{ wishlist().has(product.id) ? '❤' : '♡' }}
+                </button>
+              </div>
+
+              <!-- Card body -->
+              <div class="pc-body">
+
+                <!-- Price row -->
+                <div class="pc-price-row">
+                  <span class="pc-price">{{ product.price | currency:'USD':'symbol':'1.0-0' }}</span>
+                  @if (product.discount > 0) {
+                    <span class="pc-orig">{{ product.originalPrice | currency:'USD':'symbol':'1.0-0' }}</span>
+                  }
+                </div>
+
+                <!-- Product name -->
+                <p class="pc-name">{{ product.name }}</p>
+
+                <!-- Star rating -->
+                <div class="pc-rating">
+                  <span class="pc-stars">★ {{ product.rating }}</span>
+                  <span class="pc-reviews">{{ product.reviewCount | number }} reviews</span>
+                </div>
+
+                <!-- Add to cart -->
+                @if (canBuy(product)) {
+                  <button class="pc-cart-btn" (click)="addToCart(product, $event)">
+                    <span class="pc-cart-icon">🛒</span>
+                    <span class="pc-cart-text">
+                      Add to Cart
+                      <em>Delivery by tomorrow</em>
+                    </span>
+                  </button>
+                } @else {
+                  <div class="pc-cart-btn pc-cart-btn--disabled">
+                    <span class="pc-cart-icon">🚫</span>
+                    <span class="pc-cart-text">
+                      {{ authService.isAdmin() ? 'Admin cannot buy' : 'Your product' }}
+                    </span>
+                  </div>
+                }
+
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+    </main>
+  </div>
+</div>

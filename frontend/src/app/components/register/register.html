@@ -1,0 +1,105 @@
+<div class="auth-wrap">
+
+  <!-- Left brand panel -->
+  <aside class="auth-brand">
+    <a class="brand-logo" routerLink="/">🛍 ShopMall</a>
+    <div class="brand-body">
+      <h2>Join thousands<br>of happy shoppers.</h2>
+      <p>Create a free account and start shopping today.</p>
+      <ul class="brand-perks">
+        <li>⚡ Fast, reliable delivery</li>
+        <li>🔒 Secure checkout</li>
+        <li>💬 24/7 customer support</li>
+      </ul>
+    </div>
+    <p class="brand-copy">© 2026 ShopMall</p>
+  </aside>
+
+  <!-- Right form panel -->
+  <main class="auth-panel">
+    <div class="auth-form-wrap">
+
+      <div class="auth-header">
+        <h1>Create account</h1>
+        <p>Fill in the details below to get started</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="name">First name</label>
+            <input id="name" type="text" formControlName="name"
+              placeholder="John"
+              [class.invalid]="name.invalid && name.touched" />
+            @if (name.invalid && name.touched) {
+              <span class="field-error">First name is required.</span>
+            }
+          </div>
+          <div class="field">
+            <label for="surname">Last name</label>
+            <input id="surname" type="text" formControlName="surname"
+              placeholder="Doe"
+              [class.invalid]="surname.invalid && surname.touched" />
+            @if (surname.invalid && surname.touched) {
+              <span class="field-error">Last name is required.</span>
+            }
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email"
+            placeholder="you@example.com"
+            [class.invalid]="email.invalid && email.touched" />
+          @if (email.invalid && email.touched) {
+            <span class="field-error">
+              {{ email.hasError('required') ? 'Email is required.' : 'Enter a valid email.' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password"
+            placeholder="Min. 6 characters"
+            [class.invalid]="password.invalid && password.touched" />
+          @if (password.invalid && password.touched) {
+            <span class="field-error">
+              {{ password.hasError('required') ? 'Password is required.' : 'Minimum 6 characters.' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword"
+            placeholder="••••••••"
+            [class.invalid]="(confirmPassword.touched && form.hasError('passwordMismatch'))
+                          || (confirmPassword.invalid && confirmPassword.touched)" />
+          @if (confirmPassword.touched && form.hasError('passwordMismatch')) {
+            <span class="field-error">Passwords do not match.</span>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="auth-error">{{ error() }}</div>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="btn-spinner"></span>
+          }
+          {{ loading() ? 'Creating account…' : 'Create account' }}
+        </button>
+
+      </form>
+
+      <p class="auth-switch">
+        Already have an account? <a routerLink="/login">Sign in</a>
+      </p>
+
+    </div>
+  </main>
+
+</div>

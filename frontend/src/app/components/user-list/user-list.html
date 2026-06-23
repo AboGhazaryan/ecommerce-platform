@@ -1,0 +1,20 @@
+<div class="user-list-header">
+  <h2>Users</h2>
+</div>
+
+@if (users().length > 0) {
+  <div class="user-grid">
+    @for (user of users(); track user.id) {
+      <div class="user-card">
+        <div class="user-card-avatar">{{ user.name[0].toUpperCase() }}</div>
+        <div class="user-card-info">
+          <div class="user-card-name">{{ user.name }} {{ user.surname }}</div>
+          <div class="user-card-email">{{ user.email }}</div>
+          <span class="user-card-role">{{ user.role }}</span>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <p class="empty-state">No users found</p>
+}

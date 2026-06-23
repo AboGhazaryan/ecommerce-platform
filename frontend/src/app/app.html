@@ -1,0 +1,12 @@
+@if (!isAuthRoute()) {
+  <app-header />
+  <app-nav-tabs />
+}
+
+<main [class.main-content]="!isAuthRoute()">
+  <router-outlet />
+</main>
+
+@if (!isAuthRoute()) {
+  <app-footer />
+}

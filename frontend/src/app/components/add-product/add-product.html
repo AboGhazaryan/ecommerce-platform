@@ -1,0 +1,185 @@
+<div class="ap-page">
+  <div class="ap-card">
+
+    <!-- Card header -->
+    <div class="ap-header">
+      <div class="ap-header-icon">📦</div>
+      <div>
+        <h1 class="ap-title">Add New Product</h1>
+        <p class="ap-subtitle">Fill in the details below to list a new product</p>
+      </div>
+    </div>
+
+    <!-- Success banner -->
+    @if (success()) {
+      <div class="ap-success animate-in">
+        <span class="ap-success-icon">✓</span>
+        <span>Product submitted successfully! It will become visible after admin approval.</span>
+      </div>
+    }
+
+    <!-- Error banner -->
+    @if (error()) {
+      <div class="ap-error animate-in">
+        <span>⚠</span>
+        <span>{{ error() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="ap-form">
+
+      <!-- ── Product Name ── -->
+      <div class="field">
+        <label class="field-label" for="name">
+          Product Name <span class="req">*</span>
+        </label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          placeholder="e.g. Wireless Noise-Cancelling Headphones"
+          autocomplete="off"
+          [class.invalid]="name.invalid && name.touched"
+        />
+        @if (name.invalid && name.touched) {
+          <span class="field-error">name can't be blank</span>
+        }
+      </div>
+
+      <!-- ── Description ── -->
+      <div class="field">
+        <div class="field-label-row">
+          <label class="field-label" for="description">Description <span class="req">*</span></label>
+          <span class="char-count"
+                [class.char-count--warn]="descLength > 450"
+                [class.char-count--max]="descLength >= 500">
+            {{ descLength }} / 500
+          </span>
+        </div>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Describe the product — features, material, dimensions…"
+          maxlength="500"
+          rows="3"
+          [class.invalid]="description.invalid && description.touched"
+        ></textarea>
+        @if (description.invalid && description.touched) {
+          <span class="field-error">description must not exceed 500 characters</span>
+        }
+      </div>
+
+      <!-- ── Price + Category ── -->
+      <div class="field-row">
+
+        <div class="field">
+          <label class="field-label" for="price">
+            Price <span class="req">*</span>
+          </label>
+          <div class="input-affix-wrap">
+            <span class="input-prefix">$</span>
+            <input
+              id="price"
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+              [class.invalid]="price.invalid && price.touched"
+            />
+          </div>
+          @if (price.invalid && price.touched) {
+            <span class="field-error">
+              {{ price.hasError('required') ? "price can't be null" : 'price must be greater than 0' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="category">
+            Category <span class="req">*</span>
+          </label>
+          <select
+            id="category"
+            formControlName="category"
+            [class.invalid]="category.invalid && category.touched"
+          >
+            <option value="" disabled>Select a category</option>
+            @for (cat of categories; track cat.value) {
+              <option [value]="cat.value">{{ cat.icon }} {{ cat.label }}</option>
+            }
+          </select>
+          @if (category.invalid && category.touched) {
+            <span class="field-error">category can't be null</span>
+          }
+        </div>
+
+      </div>
+
+      <!-- ── Quantity ── -->
+      <div class="field">
+        <label class="field-label" for="quantity">
+          Quantity <span class="req">*</span>
+        </label>
+        <input
+          id="quantity"
+          type="number"
+          formControlName="quantity"
+          placeholder="0"
+          min="0"
+          step="1"
+          [class.invalid]="quantity.invalid && quantity.touched"
+        />
+        @if (quantity.invalid && quantity.touched) {
+          <span class="field-error">
+            {{ quantity.hasError('required') ? "quantity can't be null" : 'quantity must be 0 or more' }}
+          </span>
+        }
+      </div>
+
+      <!-- ── Photo Upload ── -->
+      <div class="field">
+        <label class="field-label">
+          Product Photos
+          <span class="char-count">({{ selectedFiles().length }} / {{ MAX_PHOTOS }})</span>
+        </label>
+        <label class="upload-btn" [class.upload-btn--disabled]="selectedFiles().length >= MAX_PHOTOS">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            [disabled]="selectedFiles().length >= MAX_PHOTOS"
+            (change)="onFilesSelected($event)"
+            style="display:none"
+          />
+          + Add Photos
+        </label>
+        <span class="field-hint">Up to {{ MAX_PHOTOS }} photos. JPG, PNG, WEBP accepted.</span>
+
+        @if (previews().length > 0) {
+          <div class="photo-grid">
+            @for (src of previews(); track src; let i = $index) {
+              <div class="photo-thumb">
+                <img [src]="src" alt="Photo {{ i + 1 }}" />
+                <button type="button" class="photo-remove" (click)="removeFile(i)">✕</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- ── Form actions ── -->
+      <div class="ap-actions">
+        <a class="btn-cancel" routerLink="/mall">Cancel</a>
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="btn-spinner"></span>
+          }
+          {{ loading() ? 'Adding product…' : 'Add Product →' }}
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>

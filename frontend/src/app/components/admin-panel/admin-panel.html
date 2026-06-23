@@ -1,0 +1,217 @@
+<div class="admin-wrap">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">Admin Panel</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activeTab()==='users'" (click)="setTab('users')">
+        <span class="nav-icon">👥</span> Users
+      </button>
+      <button class="nav-item" [class.active]="activeTab()==='products'" (click)="setTab('products')">
+        <span class="nav-icon">📦</span> Products
+      </button>
+      <button class="nav-item" [class.active]="activeTab()==='orders'" (click)="setTab('orders')">
+        <span class="nav-icon">🛒</span> Orders
+      </button>
+      <button class="nav-item" [class.active]="activeTab()==='payments'" (click)="setTab('payments')">
+        <span class="nav-icon">💳</span> Payments
+      </button>
+      <button class="nav-item" [class.active]="activeTab()==='notifications'" (click)="setTab('notifications')">
+        <span class="nav-icon">🔔</span> Notifications
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="admin-main">
+
+    @if (error()) {
+      <div class="admin-error">{{ error() }}</div>
+    }
+
+    @if (loading()) {
+      <div class="admin-loading">Loading…</div>
+    }
+
+    <!-- ═══ USERS ═══ -->
+    @if (activeTab() === 'users' && !loading()) {
+      <section>
+        <h2 class="section-title">Users <span class="count">({{ users().length }})</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (u of users(); track u.id) {
+                <tr [class.row-blocked]="u.blocked">
+                  <td>{{ u.id }}</td>
+                  <td>{{ u.name }} {{ u.surname }}</td>
+                  <td>{{ u.email }}</td>
+                  <td><span class="badge" [class]="u.role === 'ADMIN' ? 'badge-admin' : 'badge-user'">{{ u.role }}</span></td>
+                  <td>
+                    <span class="badge" [class]="u.blocked ? 'badge-rejected' : 'badge-approved'">
+                      {{ u.blocked ? 'Blocked' : 'Active' }}
+                    </span>
+                  </td>
+                  <td>{{ formatDate(u.createdAt) }}</td>
+                  <td class="actions">
+                    <button class="btn-sm" [class]="u.blocked ? 'btn-success' : 'btn-warn'" (click)="blockUser(u)">
+                      {{ u.blocked ? 'Unblock' : 'Block' }}
+                    </button>
+                    @if (u.role !== 'ADMIN') {
+                      <button class="btn-sm btn-danger" (click)="deleteUser(u.id)">Delete</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- ═══ PRODUCTS ═══ -->
+    @if (activeTab() === 'products' && !loading()) {
+      <section>
+        <h2 class="section-title">Products <span class="count">({{ products().length }})</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Price</th><th>Category</th><th>Status</th><th>Owner ID</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of products(); track p.id) {
+                <tr>
+                  <td>{{ p.id }}</td>
+                  <td>{{ p.name }}</td>
+                  <td>${{ p.price }}</td>
+                  <td>{{ p.category }}</td>
+                  <td><span class="badge" [class]="statusClass(p.status)">{{ p.status }}</span></td>
+                  <td>{{ p.userId ?? '—' }}</td>
+                  <td class="actions">
+                    @if (p.status === 'PENDING') {
+                      <button class="btn-sm btn-success" (click)="approveProduct(p.id)">Approve</button>
+                      <button class="btn-sm btn-warn"    (click)="rejectProduct(p.id)">Reject</button>
+                    }
+                    @if (p.status === 'REJECTED') {
+                      <button class="btn-sm btn-success" (click)="approveProduct(p.id)">Approve</button>
+                    }
+                    <button class="btn-sm btn-danger" (click)="deleteProduct(p.id)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- ═══ ORDERS ═══ -->
+    @if (activeTab() === 'orders' && !loading()) {
+      <section>
+        <h2 class="section-title">Orders <span class="count">({{ orders().length }})</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>User ID</th><th>Total</th><th>Status</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (o of orders(); track o.id) {
+                <tr>
+                  <td>{{ o.id }}</td>
+                  <td>{{ o.userId }}</td>
+                  <td>${{ o.totalPrice }}</td>
+                  <td>
+                    <select class="status-select" [value]="o.status" (change)="updateOrderStatus(o.id, $event)">
+                      @for (s of orderStatuses; track s) {
+                        <option [value]="s" [selected]="s === o.status">{{ s }}</option>
+                      }
+                    </select>
+                  </td>
+                  <td>{{ formatDate(o.createdAt) }}</td>
+                  <td class="actions">
+                    <button class="btn-sm btn-danger" (click)="deleteOrder(o.id)">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- ═══ PAYMENTS ═══ -->
+    @if (activeTab() === 'payments' && !loading()) {
+      <section>
+        <h2 class="section-title">Payments <span class="count">({{ payments().length }})</span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Order ID</th><th>User Email</th><th>Amount</th><th>Status</th><th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of payments(); track p.id) {
+                <tr>
+                  <td>{{ p.id }}</td>
+                  <td>{{ p.orderId }}</td>
+                  <td>{{ p.userEmail }}</td>
+                  <td>${{ p.amount }}</td>
+                  <td><span class="badge" [class]="statusClass(p.status)">{{ p.status }}</span></td>
+                  <td>{{ formatDate(p.createdAt) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+    <!-- ═══ NOTIFICATIONS ═══ -->
+    @if (activeTab() === 'notifications' && !loading()) {
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">Notifications <span class="count">({{ notifications().length }})</span></h2>
+          <button class="btn-sm" (click)="loadTab('notifications')">↻ Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>User ID</th><th>Email</th><th>Type</th><th>Message</th><th>Date</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (n of notifications(); track n.id) {
+                <tr>
+                  <td>{{ n.id }}</td>
+                  <td>{{ n.userId }}</td>
+                  <td>{{ n.userEmail }}</td>
+                  <td><span class="badge badge-pending">{{ n.type }}</span></td>
+                  <td class="msg-cell">{{ n.message }}</td>
+                  <td>{{ formatDate(n.createdAt) }}</td>
+                  <td class="actions">
+                    <button class="btn-sm btn-danger" (click)="deleteNotification(n.id)">Delete</button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr><td colspan="7" style="text-align:center;padding:1.5rem;color:#888;">
+                  No notifications found. Click ↻ Refresh to reload.
+                </td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+
+  </main>
+</div>

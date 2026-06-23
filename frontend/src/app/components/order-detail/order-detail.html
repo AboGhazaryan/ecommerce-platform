@@ -1,0 +1,99 @@
+@if (loading()) {
+  <div class="od-page">
+    <div class="sk sk-w30 sk-sm" style="margin-bottom:2rem"></div>
+    <div class="sk sk-w50" style="margin-bottom:.5rem"></div>
+    <div class="sk sk-w25 sk-sm" style="margin-bottom:2rem"></div>
+    <div class="sk sk-bar" style="height:64px; border-radius:var(--radius)"></div>
+  </div>
+} @else if (error()) {
+  <div class="od-page">
+    <div class="state-box state-error animate-in">
+      <div class="state-icon-wrap state-icon--error">⚠</div>
+      <h3>Not found</h3>
+      <p>{{ error() }}</p>
+      <a routerLink="/orders" class="btn-back-cta">← Back to orders</a>
+    </div>
+  </div>
+} @else if (order(); as o) {
+  <div class="od-page animate-in">
+
+    <!-- Breadcrumb -->
+    <nav class="od-breadcrumb">
+      <a routerLink="/orders" class="bc-link">Orders</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current">#{{ o.id }}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="od-header">
+      <div class="od-title-row">
+        <h1 class="od-title">Order <span class="od-id">#{{ o.id }}</span></h1>
+        <span class="od-badge" [class]="'od-badge--' + o.status.toLowerCase()">{{ o.status }}</span>
+      </div>
+      <p class="od-date">Placed {{ o.createdAt | date:'MMMM d, y · h:mm a' }}</p>
+    </div>
+
+    <!-- Status Timeline -->
+    @if (o.status !== 'CANCELLED') {
+      <div class="od-timeline-wrap">
+        <div class="od-timeline">
+          @for (step of steps; track step; let i = $index) {
+            <div class="tl-node">
+              <div class="tl-dot"
+                   [class.tl-dot--done]="statusStep(o.status) > i"
+                   [class.tl-dot--current]="statusStep(o.status) === i">
+              </div>
+              <span class="tl-label" [class.tl-label--active]="statusStep(o.status) >= i">
+                {{ step }}
+              </span>
+            </div>
+            @if (i < steps.length - 1) {
+              <div class="tl-line" [class.tl-line--done]="statusStep(o.status) > i"></div>
+            }
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="od-cancelled-banner">
+        <span>✕</span> This order was cancelled.
+      </div>
+    }
+
+    <!-- Items -->
+    <div class="od-card">
+      <h2 class="od-card-title">Order items</h2>
+
+      <div class="od-items">
+        @for (item of o.items; track item.productId; let last = $last) {
+          <div class="od-item" [class.od-item--last]="last">
+            <div class="item-avatar">{{ (item.productName || 'P')[0].toUpperCase() }}</div>
+            <div class="item-info">
+              <div class="item-name">{{ item.productName || 'Product #' + item.productId }}</div>
+              @if (item.sellerName) {
+                <div class="item-seller">{{ item.sellerName }} {{ item.sellerSurname }}</div>
+              }
+              <div class="item-meta">Qty {{ item.quantity }} × {{ item.price | currency }}</div>
+            </div>
+            <div class="item-subtotal">{{ item.quantity * item.price | currency }}</div>
+          </div>
+        }
+      </div>
+
+      <div class="od-summary">
+        @if (o.items.length > 1) {
+          @for (item of o.items; track item.productId) {
+            <div class="summary-row">
+              <span>{{ item.productName || 'Product #' + item.productId }}</span>
+              <span>{{ item.quantity * item.price | currency }}</span>
+            </div>
+          }
+        }
+        <div class="summary-row summary-row--total">
+          <span>Total</span>
+          <span>{{ o.totalPrice | currency }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+}

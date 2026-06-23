@@ -1,0 +1,147 @@
+@if (cartToast()) {
+  <div class="cart-toast">{{ cartToast() }}</div>
+}
+
+<div class="pd-page">
+
+  <!-- Back -->
+  <button class="pd-back" (click)="goBack()">← Back to shop</button>
+
+  @if (loading()) {
+    <div class="pd-loading">
+      <div class="pd-skeleton">
+        <div class="sk-gallery"></div>
+        <div class="sk-info">
+          <div class="sk-line sk-w60"></div>
+          <div class="sk-line sk-w40"></div>
+          <div class="sk-line sk-w80"></div>
+          <div class="sk-line sk-w50"></div>
+        </div>
+      </div>
+    </div>
+
+  } @else if (error()) {
+    <div class="pd-error">
+      <p>{{ error() }}</p>
+      <button class="pd-back" (click)="goBack()">← Go back</button>
+    </div>
+
+  } @else if (product()) {
+    <div class="pd-layout">
+
+      <!-- ── Gallery ── -->
+      <div class="pd-gallery">
+
+        <!-- Main image -->
+        <div class="pd-main-wrap">
+          @if (images().length > 0) {
+            @if (images().length > 1) {
+              <button class="pd-arrow pd-arrow--left" (click)="prev()">‹</button>
+            }
+            <img class="pd-main-img"
+                 [src]="activeImage()"
+                 [alt]="product()!.name"
+                 (error)="onImageError($event)" />
+            @if (images().length > 1) {
+              <button class="pd-arrow pd-arrow--right" (click)="next()">›</button>
+            }
+            @if (images().length > 1) {
+              <div class="pd-dots">
+                @for (img of images(); track img; let i = $index) {
+                  <span class="pd-dot" [class.pd-dot--active]="i === activeIndex()" (click)="setActive(i)"></span>
+                }
+              </div>
+            }
+          } @else {
+            <div class="pd-no-img">
+              <span class="pd-no-img-letter">{{ product()!.name[0].toUpperCase() }}</span>
+              <span class="pd-no-img-text">No photos yet</span>
+            </div>
+          }
+        </div>
+
+        <!-- Thumbnails -->
+        @if (images().length > 1) {
+          <div class="pd-thumbs">
+            @for (img of images(); track img; let i = $index) {
+              <div class="pd-thumb-wrap" [class.pd-thumb--active]="i === activeIndex()" (click)="setActive(i)">
+                <img class="pd-thumb" [src]="img" [alt]="'Photo ' + (i+1)" (error)="onImageError($event)" />
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+
+      <!-- ── Info panel ── -->
+      <div class="pd-info">
+
+        <!-- Status badge -->
+        @if (product()!.status !== 'APPROVED') {
+          <span class="pd-status-badge pd-status-badge--{{ product()!.status | lowercase }}">
+            {{ product()!.status }}
+          </span>
+        }
+
+        <!-- Name -->
+        <h1 class="pd-name">{{ product()!.name }}</h1>
+
+        <!-- Category -->
+        <p class="pd-category">{{ product()!.category }}</p>
+
+        <!-- Price -->
+        <div class="pd-price-row">
+          <span class="pd-price">{{ product()!.price | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+
+        <!-- Stock -->
+        <p class="pd-stock" [class.pd-stock--low]="product()!.quantity <= 5">
+          @if (product()!.quantity > 0) {
+            {{ product()!.quantity <= 5 ? 'Only ' : '' }}{{ product()!.quantity }} {{ product()!.quantity === 1 ? 'item' : 'items' }} in stock
+          } @else {
+            Out of stock
+          }
+        </p>
+
+        <!-- Description -->
+        @if (product()!.description) {
+          <div class="pd-desc-block">
+            <h3 class="pd-desc-title">Description</h3>
+            <p class="pd-desc">{{ product()!.description }}</p>
+          </div>
+        }
+
+        <!-- Seller info -->
+        @if (seller()) {
+          <div class="pd-seller">
+            <h3 class="pd-seller-title">Seller</h3>
+            <p class="pd-seller-name">{{ seller()!.name }} {{ seller()!.surname }}</p>
+            <p class="pd-seller-email">{{ seller()!.email }}</p>
+          </div>
+        }
+
+        <!-- Add to cart / restriction -->
+        <div class="pd-actions">
+          @if (product()!.quantity > 0 && canBuy()) {
+            <button class="pd-btn-cart" (click)="addToCart()">
+              🛒 Add to Cart
+            </button>
+          } @else if (!canBuy()) {
+            <div class="pd-btn-disabled">
+              🚫 {{ authService.isAdmin() ? 'Admins cannot purchase' : 'This is your own product' }}
+            </div>
+          } @else {
+            <div class="pd-btn-disabled">Out of stock</div>
+          }
+        </div>
+
+        <!-- Photo count hint -->
+        @if (images().length > 0) {
+          <p class="pd-photo-count">{{ images().length }} photo{{ images().length > 1 ? 's' : '' }}</p>
+        }
+
+      </div>
+    </div>
+  }
+
+</div>

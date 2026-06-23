@@ -1,0 +1,89 @@
+<div class="ep-page">
+
+  <div class="ep-hero">
+    <div class="ep-avatar">✏️</div>
+    <div>
+      <h1 class="ep-title">Edit Profile</h1>
+      <p class="ep-subtitle">Update your personal information</p>
+    </div>
+  </div>
+
+  <div class="ep-card">
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="name">First name</label>
+          <input id="name" type="text" formControlName="name"
+            placeholder="John"
+            [class.invalid]="name.invalid && name.touched" />
+          @if (name.invalid && name.touched) {
+            <span class="field-error">First name is required.</span>
+          }
+        </div>
+        <div class="field">
+          <label for="surname">Last name</label>
+          <input id="surname" type="text" formControlName="surname"
+            placeholder="Doe"
+            [class.invalid]="surname.invalid && surname.touched" />
+          @if (surname.invalid && surname.touched) {
+            <span class="field-error">Last name is required.</span>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email"
+          placeholder="you@example.com"
+          [class.invalid]="email.invalid && email.touched" />
+        @if (email.invalid && email.touched) {
+          <span class="field-error">
+            {{ email.hasError('required') ? 'Email is required.' : 'Enter a valid email.' }}
+          </span>
+        }
+      </div>
+
+      <div class="ep-divider">
+        <span>Change password <span class="ep-optional">(optional)</span></span>
+      </div>
+
+      <div class="field">
+        <label for="password">New password</label>
+        <input id="password" type="password" formControlName="password"
+          placeholder="Min. 6 characters"
+          [class.invalid]="password.invalid && password.touched" />
+        @if (password.invalid && password.touched) {
+          <span class="field-error">Minimum 6 characters.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm new password</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword"
+          placeholder="••••••••"
+          [class.invalid]="confirmPassword.touched && form.hasError('passwordMismatch')" />
+        @if (confirmPassword.touched && form.hasError('passwordMismatch')) {
+          <span class="field-error">Passwords do not match.</span>
+        }
+      </div>
+
+      @if (error()) {
+        <div class="ep-alert ep-alert--error">{{ error() }}</div>
+      }
+      @if (success()) {
+        <div class="ep-alert ep-alert--success">{{ success() }}</div>
+      }
+
+      <div class="ep-actions">
+        <a routerLink="/account" class="btn-cancel">Cancel</a>
+        <button type="submit" class="btn-save" [disabled]="loading()">
+          @if (loading()) { <span class="btn-spinner"></span> }
+          {{ loading() ? 'Saving…' : 'Save changes' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

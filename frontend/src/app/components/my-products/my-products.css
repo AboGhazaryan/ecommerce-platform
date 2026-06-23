@@ -1,0 +1,37 @@
+.my-products-page { max-width: 1000px; margin: 32px auto; padding: 0 16px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h1 { font-size: 1.6rem; margin: 0; }
+.btn-add { background: #f57c00; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; text-decoration: none; }
+
+.state-msg { text-align: center; color: #555; margin-top: 40px; }
+.state-msg.error { color: #c62828; }
+.state-msg a { color: #f57c00; }
+
+.product-table-wrap { overflow-x: auto; }
+.product-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.product-table th, .product-table td { padding: 12px 14px; border-bottom: 1px solid #eee; text-align: left; }
+.product-table th { background: #fafafa; font-weight: 600; }
+
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; }
+.badge-pending  { background: #fff3cd; color: #856404; }
+.badge-approved { background: #d1e7dd; color: #155724; }
+.badge-rejected { background: #f8d7da; color: #842029; }
+
+.actions { display: flex; gap: 8px; }
+.btn-edit   { background: #1976d2; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+.btn-delete { background: #c62828; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+
+.edit-row td { background: #f9f9f9; padding: 16px; }
+.edit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field--full { grid-column: 1 / -1; }
+.field label { font-size: 0.82rem; color: #555; font-weight: 600; }
+.field input, .field select, .field textarea {
+  padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;
+}
+.edit-error { color: #c62828; font-size: 0.85rem; margin: 8px 0 0; }
+.edit-actions { display: flex; gap: 10px; margin-top: 14px; }
+.btn-save   { background: #2e7d32; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+.btn-cancel { background: #eee; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+.btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+.edit-note { font-size: 0.78rem; color: #888; margin-top: 6px; }

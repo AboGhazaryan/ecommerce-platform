@@ -1,0 +1,101 @@
+<div class="cart-page">
+  <div class="cart-header">
+    <h1 class="cart-title">My Cart</h1>
+    @if (cart.count() > 0) {
+      <span class="cart-count">{{ cart.count() }} {{ cart.count() === 1 ? 'item' : 'items' }}</span>
+    }
+  </div>
+
+  @if (cart.items().length === 0) {
+
+    <!-- ── Empty state ── -->
+    <div class="cart-empty animate-in">
+      <div class="cart-empty-icon">🛒</div>
+      <h2 class="cart-empty-title">Your cart is empty</h2>
+      <p class="cart-empty-sub">Add some products from the shop to get started.</p>
+      <a class="cart-empty-btn" routerLink="/mall">Browse Products</a>
+    </div>
+
+  } @else {
+
+    <!-- ── Cart layout ── -->
+    <div class="cart-layout">
+
+      <!-- Left: items -->
+      <div class="cart-items">
+        @for (item of cart.items(); track item.productId) {
+          <div class="cart-item animate-in">
+
+            <!-- Item image -->
+            <div class="ci-img-wrap">
+              @if (item.imageUrl) {
+                <img class="ci-img" [src]="item.imageUrl" [alt]="item.name"
+                     (error)="onImageError($event)" />
+              }
+              <div class="ci-img-ph">{{ item.name[0].toUpperCase() }}</div>
+            </div>
+
+            <!-- Item details -->
+            <div class="ci-details">
+              <p class="ci-name">{{ item.name }}</p>
+              <p class="ci-unit-price">{{ item.price | currency }}</p>
+            </div>
+
+            <!-- Qty controls -->
+            <div class="ci-qty">
+              <button class="qty-btn" (click)="decrement(item.productId, item.quantity)"
+                      [attr.aria-label]="'Decrease quantity'">−</button>
+              <input class="qty-input" type="number" [value]="item.quantity" min="1"
+                     (change)="onQtyInput(item.productId, $event)" />
+              <button class="qty-btn" (click)="increment(item.productId, item.quantity)"
+                      [attr.aria-label]="'Increase quantity'"
+                      [disabled]="item.quantity >= item.stock">+</button>
+            </div>
+
+            <!-- Line total -->
+            <div class="ci-line-total">
+              {{ item.price * item.quantity | currency }}
+            </div>
+
+            <!-- Remove -->
+            <button class="ci-remove" (click)="cart.removeFromCart(item.productId)"
+                    aria-label="Remove item">
+              ✕
+            </button>
+
+          </div>
+        }
+
+        <a class="cart-continue" routerLink="/mall">← Continue Shopping</a>
+      </div>
+
+      <!-- Right: order summary -->
+      <aside class="cart-summary">
+        <div class="cs-title">Order Summary</div>
+
+        <div class="cs-row">
+          <span>Subtotal ({{ cart.count() }} items)</span>
+          <span>{{ cart.total() | currency }}</span>
+        </div>
+        <div class="cs-row">
+          <span>Shipping</span>
+          <span class="cs-free">Free</span>
+        </div>
+        <div class="cs-divider"></div>
+        <div class="cs-row cs-row--total">
+          <span>Total</span>
+          <span>{{ cart.total() | currency }}</span>
+        </div>
+
+        <a class="cs-checkout-btn" routerLink="/checkout">
+          Proceed to Checkout →
+        </a>
+
+        <button class="cs-clear-btn" (click)="cart.clearCart()">
+          Clear Cart
+        </button>
+      </aside>
+
+    </div>
+  }
+</div>

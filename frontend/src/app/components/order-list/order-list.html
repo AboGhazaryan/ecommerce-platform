@@ -1,0 +1,86 @@
+<div class="ol-page">
+
+  <div class="ol-header">
+    <h1 class="ol-title">My Orders</h1>
+    @if (!loading() && !error()) {
+      <span class="ol-count">
+        {{ orders().length }} {{ orders().length === 1 ? 'order' : 'orders' }}
+      </span>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="ol-skeletons">
+      @for (n of skeletons; track n) {
+        <div class="sk-card">
+          <div class="sk-row">
+            <div class="sk sk-w50"></div>
+            <div class="sk sk-w20 sk-pill"></div>
+          </div>
+          <div class="sk sk-w30 sk-sm"></div>
+          <div class="sk-divider"></div>
+          <div class="sk-row">
+            <div class="sk sk-w25 sk-sm"></div>
+            <div class="sk sk-w20"></div>
+          </div>
+          <div class="sk sk-bar sk-sm" style="margin-top:.75rem"></div>
+        </div>
+      }
+    </div>
+  } @else if (error()) {
+    <div class="state-box state-error animate-in">
+      <div class="state-icon-wrap state-icon--error">⚠</div>
+      <h3>Something went wrong</h3>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="state-box animate-in">
+      <div class="empty-icon">📦</div>
+      <h3>No orders yet</h3>
+      <p>Start shopping to see your orders here.</p>
+      <a class="btn-cta" routerLink="/mall">Browse products →</a>
+    </div>
+  } @else {
+    <div class="ol-list animate-in">
+      @for (order of orders(); track order.id) {
+        <a class="order-card" [routerLink]="['/orders', order.id]"
+           [class]="'order-card order-card--' + order.status.toLowerCase()">
+
+          <div class="oc-head">
+            <span class="oc-id">Order <strong>#{{ order.id }}</strong></span>
+            <span class="oc-badge" [class]="'oc-badge--' + order.status.toLowerCase()">
+              {{ order.status }}
+            </span>
+          </div>
+
+          <div class="oc-date">{{ order.createdAt | date:'MMMM d, y' }}</div>
+
+          <div class="oc-divider"></div>
+
+          <div class="oc-footer">
+            <span class="oc-items">
+              {{ order.items.length }} {{ order.items.length === 1 ? 'item' : 'items' }}
+            </span>
+            <span class="oc-total">{{ order.totalPrice | currency }}</span>
+          </div>
+
+          @if (order.status !== 'CANCELLED') {
+            <div class="oc-progress">
+              <div class="progress-track">
+                <div class="progress-fill"
+                     [style.width.%]="progressPct(order.status)"></div>
+              </div>
+              <div class="progress-labels">
+                @for (lbl of ['Pending','Confirmed','Shipped','Delivered']; track lbl; let i = $index) {
+                  <span [class.progress-label--done]="statusStep(order.status) >= i + 1">{{ lbl }}</span>
+                }
+              </div>
+            </div>
+          }
+
+        </a>
+      }
+    </div>
+  }
+
+</div>

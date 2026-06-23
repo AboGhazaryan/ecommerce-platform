@@ -1,0 +1,32 @@
+<div class="home-page">
+
+  <div class="hero-banner">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Fast delivery · Wide selection</p>
+      <h1>Your online mall,<br>delivered to the door</h1>
+      <a class="hero-cta" routerLink="/mall">Shop now →</a>
+    </div>
+  </div>
+
+  <section class="home-section">
+    <h2 class="section-title">What are you looking for?</h2>
+    <div class="category-grid">
+      @for (cat of categories; track cat.label) {
+        <a class="category-tile"
+           [routerLink]="cat.route"
+           [queryParams]="cat.queryParams">
+          <div class="tile-icon"
+               [style.background]="cat.color + '18'"
+               [style.color]="cat.color">
+            {{ cat.icon }}
+          </div>
+          <div class="tile-info">
+            <span class="tile-label">{{ cat.label }}</span>
+            <span class="tile-desc">{{ cat.description }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+
+</div>

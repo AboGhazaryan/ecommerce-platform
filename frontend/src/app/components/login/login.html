@@ -1,0 +1,73 @@
+<div class="auth-wrap">
+
+  <!-- Left brand panel -->
+  <aside class="auth-brand">
+    <a class="brand-logo" routerLink="/">🛍 ShopMall</a>
+    <div class="brand-body">
+      <h2>Shop smarter,<br>live better.</h2>
+      <p>Discover thousands of products delivered straight to your door.</p>
+      <ul class="brand-perks">
+        <li>⚡ Fast, reliable delivery</li>
+        <li>🔒 Secure checkout</li>
+        <li>💬 24/7 customer support</li>
+      </ul>
+    </div>
+    <p class="brand-copy">© 2026 ShopMall</p>
+  </aside>
+
+  <!-- Right form panel -->
+  <main class="auth-panel">
+    <div class="auth-form-wrap">
+
+      <div class="auth-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to continue to ShopMall</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email"
+            placeholder="you@example.com"
+            [class.invalid]="email.invalid && email.touched" />
+          @if (email.invalid && email.touched) {
+            <span class="field-error">
+              {{ email.hasError('required') ? 'Email is required.' : 'Enter a valid email.' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" formControlName="password"
+            placeholder="••••••••"
+            [class.invalid]="password.invalid && password.touched" />
+          @if (password.invalid && password.touched) {
+            <span class="field-error">
+              {{ password.hasError('required') ? 'Password is required.' : 'Minimum 6 characters.' }}
+            </span>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="auth-error">{{ error() }}</div>
+        }
+
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="btn-spinner"></span>
+          }
+          {{ loading() ? 'Signing in…' : 'Sign in' }}
+        </button>
+
+      </form>
+
+      <p class="auth-switch">
+        Don't have an account? <a routerLink="/register">Create one</a>
+      </p>
+
+    </div>
+  </main>
+
+</div>

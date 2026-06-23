@@ -1,0 +1,22 @@
+.pending-page { max-width: 960px; margin: 32px auto; padding: 0 16px; }
+.pending-page h1 { font-size: 1.6rem; margin-bottom: 24px; }
+
+.state-msg { text-align: center; color: #555; margin-top: 40px; }
+.state-msg.error { color: #c62828; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow: hidden; display: flex; flex-direction: column; }
+.card-img { width: 100%; height: 160px; object-fit: cover; }
+.card-body { padding: 14px 16px; flex: 1; }
+.card-name { font-size: 1rem; font-weight: 700; margin: 0 0 6px; }
+.card-desc { font-size: 0.85rem; color: #555; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.card-price { font-weight: 700; color: #f57c00; }
+.card-cat, .card-qty { font-size: 0.8rem; background: #f0f0f0; padding: 2px 8px; border-radius: 10px; color: #444; }
+.card-seller { font-size: 0.78rem; color: #888; margin: 0; }
+.card-actions { display: flex; gap: 0; border-top: 1px solid #eee; }
+.btn-approve, .btn-reject { flex: 1; border: none; padding: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.btn-approve { background: #e8f5e9; color: #2e7d32; }
+.btn-approve:hover { background: #c8e6c9; }
+.btn-reject  { background: #fce4ec; color: #c62828; }
+.btn-reject:hover  { background: #f8bbd0; }

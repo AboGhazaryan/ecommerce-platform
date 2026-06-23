@@ -1,0 +1,88 @@
+<div class="my-products-page">
+  <div class="page-header">
+    <h1>My Products</h1>
+    <a class="btn-add" routerLink="/products/new">+ Add Product</a>
+  </div>
+
+  @if (loading()) {
+    <p class="state-msg">Loading...</p>
+  } @else if (error()) {
+    <p class="state-msg error">{{ error() }}</p>
+  } @else if (products().length === 0) {
+    <p class="state-msg">You haven't added any products yet. <a routerLink="/products/new">Add one now</a>.</p>
+  } @else {
+    <div class="product-table-wrap">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of products(); track p.id) {
+            @if (editingId() === p.id) {
+              <!-- Edit row -->
+              <tr class="edit-row">
+                <td colspan="6">
+                  <form [formGroup]="editForm" (ngSubmit)="saveEdit(p.id)" class="edit-form">
+                    <div class="edit-grid">
+                      <div class="field">
+                        <label>Name</label>
+                        <input formControlName="name" type="text" />
+                      </div>
+                      <div class="field">
+                        <label>Price</label>
+                        <input formControlName="price" type="number" step="0.01" />
+                      </div>
+                      <div class="field">
+                        <label>Quantity</label>
+                        <input formControlName="quantity" type="number" />
+                      </div>
+                      <div class="field">
+                        <label>Category</label>
+                        <select formControlName="category">
+                          @for (c of categories; track c.value) {
+                            <option [value]="c.value">{{ c.label }}</option>
+                          }
+                        </select>
+                      </div>
+                      <div class="field field--full">
+                        <label>Description</label>
+                        <textarea formControlName="description" rows="2"></textarea>
+                      </div>
+                    </div>
+                    @if (editError()) { <p class="edit-error">{{ editError() }}</p> }
+                    <div class="edit-actions">
+                      <button type="submit" class="btn-save" [disabled]="editLoading()">
+                        {{ editLoading() ? 'Saving...' : 'Save' }}
+                      </button>
+                      <button type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+                    </div>
+                    <p class="edit-note">Note: after editing, the product will require admin re-approval.</p>
+                  </form>
+                </td>
+              </tr>
+            } @else {
+              <tr>
+                <td>{{ p.name }}</td>
+                <td>${{ p.price }}</td>
+                <td>{{ p.quantity }}</td>
+                <td>{{ p.category }}</td>
+                <td><span class="badge" [class]="statusClass(p.status)">{{ statusLabel(p.status) }}</span></td>
+                <td class="actions">
+                  <button class="btn-edit" (click)="startEdit(p)">Edit</button>
+                  <button class="btn-delete" (click)="delete(p.id)">Delete</button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

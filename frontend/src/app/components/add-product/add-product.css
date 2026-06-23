@@ -1,0 +1,390 @@
+/* ── Page wrapper ── */
+.ap-page {
+  min-height: calc(100vh - var(--header-height) - var(--nav-height) - 60px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1.25rem 4rem;
+  background: var(--color-bg);
+}
+
+/* ── Card ── */
+.ap-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2.25rem 2.5rem;
+  width: 100%;
+  max-width: 680px;
+}
+
+/* ── Card header ── */
+.ap-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-header-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.ap-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin-bottom: 0.2rem;
+}
+
+.ap-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Banners ── */
+.ap-success {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+}
+
+.ap-success-icon {
+  width: 22px;
+  height: 22px;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.ap-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 25%, transparent);
+  color: #b91c1c;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Form ── */
+.ap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Fields ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.req {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+/* ── Inputs, textarea, select ── */
+.field input,
+.field textarea,
+.field select {
+  padding: 0.7rem 0.875rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.925rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 13%, transparent);
+}
+
+.field input.invalid,
+.field textarea.invalid,
+.field select.invalid {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+
+.field input::placeholder,
+.field textarea::placeholder { color: var(--color-text-subtle); }
+
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.55;
+}
+
+.field select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.25rem;
+}
+
+/* ── Price input with $ prefix ── */
+.input-affix-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 0.875rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+.input-affix-wrap input {
+  padding-left: 1.75rem;
+}
+
+/* ── Character counter ── */
+.char-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  transition: color var(--transition);
+}
+
+.char-count--warn { color: var(--color-warning); }
+.char-count--max  { color: var(--color-danger); font-weight: 700; }
+
+/* ── Field error ── */
+.field-error {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-danger);
+}
+
+/* ── Two-column row ── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+
+/* ── Actions ── */
+.ap-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.25rem;
+}
+
+.btn-cancel {
+  padding: 0.7rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.btn-cancel:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.75rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Inline button spinner */
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Photo upload ── */
+.upload-btn {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  background: var(--color-bg);
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.upload-btn:hover:not(.upload-btn--disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.upload-btn--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.field-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-subtle);
+  margin-top: 0.25rem;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.photo-thumb {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  aspect-ratio: 1;
+}
+
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-remove {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+
+.photo-remove:hover { background: var(--color-danger); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ap-card    { padding: 1.5rem 1.25rem; }
+  .field-row  { grid-template-columns: 1fr; }
+  .ap-actions { flex-direction: column-reverse; }
+  .btn-cancel,
+  .btn-submit { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 420px) {
+  .ap-page    { padding: 1.25rem 0.75rem 3rem; }
+  .ap-header  { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+}
+

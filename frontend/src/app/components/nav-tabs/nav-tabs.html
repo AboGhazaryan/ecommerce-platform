@@ -1,0 +1,38 @@
+<nav class="nav-tabs">
+  <div class="nav-inner">
+
+    <a class="nav-tab" routerLink="/" routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+
+    <a class="nav-tab" routerLink="/mall" routerLinkActive="active">
+      <span class="nav-icon">🛍</span>
+      <span class="nav-label">Mall</span>
+    </a>
+
+    @if (!auth.isAdmin()) {
+      <a class="nav-tab" routerLink="/cart" routerLinkActive="active">
+        <span class="nav-icon cart-wrap">
+          🛒
+          @if (cart.count() > 0) {
+            <span class="cart-badge">{{ cart.count() }}</span>
+          }
+        </span>
+        <span class="nav-label">Cart</span>
+      </a>
+
+      <a class="nav-tab" routerLink="/orders" routerLinkActive="active">
+        <span class="nav-icon">📦</span>
+        <span class="nav-label">Orders</span>
+      </a>
+    }
+
+    <a class="nav-tab" routerLink="/account" routerLinkActive="active">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Account</span>
+    </a>
+
+  </div>
+</nav>

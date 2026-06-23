@@ -1,0 +1,35 @@
+<footer class="footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <span class="footer-logo">🛍 ShopMall</span>
+      <p class="footer-tagline">Everything delivered to your door.</p>
+    </div>
+
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a routerLink="/mall">All Products</a>
+        <a routerLink="/mall" [queryParams]="{ category: 'ELECTRONICS' }">Electronics</a>
+        <a routerLink="/mall" [queryParams]="{ category: 'CLOTHING' }">Fashion</a>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <a routerLink="/login">Sign in</a>
+        <a routerLink="/register">Register</a>
+        <a routerLink="/account">Profile</a>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="#">Support</a>
+        <a href="#">FAQ</a>
+        <a href="#">Shipping info</a>
+        <a href="#">Returns</a>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ShopMall. All rights reserved.</span>
+  </div>
+</footer>

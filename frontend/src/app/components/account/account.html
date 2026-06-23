@@ -1,0 +1,89 @@
+<div class="acc-page">
+
+  <div class="acc-hero">
+    <div class="acc-avatar">
+      <span>👤</span>
+    </div>
+    <div class="acc-hero-info">
+      <h1 class="acc-title">
+        {{ auth.getFullName() || 'My Account' }}
+      </h1>
+      <p class="acc-subtitle">Manage your orders and preferences</p>
+    </div>
+  </div>
+
+  <div class="acc-tiles">
+
+    @if (!auth.isAdmin()) {
+      <a class="acc-tile" routerLink="/orders">
+        <div class="tile-icon-wrap tile-icon--orders">📦</div>
+        <div class="tile-body">
+          <div class="tile-title">My Orders</div>
+          <div class="tile-desc">Track and manage your orders</div>
+        </div>
+        <span class="tile-arrow">→</span>
+      </a>
+    }
+
+    <a class="acc-tile" routerLink="/mall">
+      <div class="tile-icon-wrap tile-icon--mall">🛍</div>
+      <div class="tile-body">
+        <div class="tile-title">Browse Products</div>
+        <div class="tile-desc">Explore our full catalog</div>
+      </div>
+      <span class="tile-arrow">→</span>
+    </a>
+
+    @if (!auth.isAdmin()) {
+      <a class="acc-tile" routerLink="/products/new">
+        <div class="tile-icon-wrap tile-icon--add">➕</div>
+        <div class="tile-body">
+          <div class="tile-title">Add Product</div>
+          <div class="tile-desc">List a neтw product in the catalog</div>
+        </div>
+        <span class="tile-arrow">→</span>
+      </a>
+
+      <a class="acc-tile" routerLink="/cart">
+        <div class="tile-icon-wrap tile-icon--cart">🛒</div>
+        <div class="tile-body">
+          <div class="tile-title">My Cart</div>
+          <div class="tile-desc">Review items before checkout</div>
+        </div>
+        <span class="tile-arrow">→</span>
+      </a>
+    }
+
+    <a class="acc-tile" routerLink="/account/edit">
+      <div class="tile-icon-wrap tile-icon--edit">✏️</div>
+      <div class="tile-body">
+        <div class="tile-title">Edit Profile</div>
+        <div class="tile-desc">Update your name, email or password</div>
+      </div>
+      <span class="tile-arrow">→</span>
+    </a>
+
+    <button class="acc-tile acc-tile--danger" (click)="logout()">
+      <div class="tile-icon-wrap tile-icon--logout">🚪</div>
+      <div class="tile-body">
+        <div class="tile-title">Sign Out</div>
+        <div class="tile-desc">Log out of your account</div>
+      </div>
+      <span class="tile-arrow">→</span>
+    </button>
+
+  </div>
+
+  @if (auth.isLoggedIn() && auth.getFullName()) {
+    <div class="acc-user-card">
+      <div class="acc-user-row">
+        <span class="acc-user-icon">👤</span>
+        <div class="acc-user-details">
+          <div class="acc-user-name">{{ auth.userName() }} {{ auth.userSurname() }}</div>
+          <div class="acc-user-email">{{ auth.userEmail() }}</div>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
