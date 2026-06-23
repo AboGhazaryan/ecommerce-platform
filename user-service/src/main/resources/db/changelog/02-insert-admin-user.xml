@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="A-2" author="A.Ghazaryan">
+        <insert tableName="users">
+            <column name="name" value="Admin"/>
+            <column name="surname" value="Admin"/>
+            <column name="email" value="albert.ghazaryan100@gmail.com"/>
+            <column name="password" value="$2a$10$C1IkerUKq4HRH4jlwaxGZOashsrvbq09sp68njHv44ogAxIQzHOG."/>
+            <column name="user_role" value="ADMIN"/>
+            <column name="created_at" valueDate="2026-03-03 12:00:00"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

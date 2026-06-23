@@ -1,0 +1,55 @@
+spring:
+  application:
+   name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+       - id: user-service
+         uri: ${USER_SERVICE_URL:http://localhost:8081}
+         predicates:
+           - Path=/users/**
+
+       - id: product-service
+         uri: ${PRODUCT_SERVICE_URL:http://localhost:8082}
+         predicates:
+           - Path=/products/**
+
+       - id: product-images
+         uri: ${PRODUCT_SERVICE_URL:http://localhost:8082}
+         predicates:
+           - Path=/images/**
+
+       - id: order-service
+         uri: ${ORDER_SERVICE_URL:http://localhost:8083}
+         predicates:
+             - Path=/orders/**
+
+       - id: payment-service
+         uri: ${PAYMENT_SERVICE_URL:http://localhost:8084}
+         predicates:
+            - Path=/payments/**
+
+       - id: notification-service
+         uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8085}
+         predicates:
+             - Path=/notifications/**
+
+server:
+  port: 8080
+jwt:
+  secret: ${JWT_SECRET:MSklaZmYkIyikKLPksjQEBkc2ZqZGZrZHNqQEAjZHNmZ2ZnZmdeXiYmWijkonjabhbahbdipeJSQkI2RzZHMkIyVzZD}

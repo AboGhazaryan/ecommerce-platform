@@ -1,0 +1,44 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog-master.xml
+  application:
+    name: notification-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5436/ecommerce_notifications}
+    username: ${USER_NAME:postgres}
+    password: ${USER_PASSWORD:postgres}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USERNAME:}
+    password: ${GMAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: notification-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+server:
+  port: 8085
+
+admin:
+  email: ${ADMIN_EMAIL:}
+  user-id: 1
+
+jwt:
+  secret: ${JWT_SECRET:MSklaZmYkIyikKLPksjQEBkc2ZqZGZrZHNqQEAjZHNmZ2ZnZmdeXiYmWijkonjabhbahbdipeJSQkI2RzZHMkIyVzZD}

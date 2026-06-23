@@ -1,0 +1,36 @@
+spring:
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+  liquibase:
+    change-log: classpath:/db/changelog-master.xml
+    enabled: true
+  application:
+   name: product-service
+  datasource:
+     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/ecommerce_product}
+     username: ${USER_NAME:postgres}
+     password: ${USER_PASSWORD:postgres}
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+server:
+  port: 8082
+
+app:
+  upload:
+    dir: uploads/product-images
+    url-prefix: ${IMAGES_BASE_URL:http://localhost:8080/images}

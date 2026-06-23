@@ -1,0 +1,22 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog-master.xml
+  application:
+     name: user-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ecommerce_user}
+    username: ${USER_NAME:postgres}
+    password: ${USER_PASSWORD:postgres}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8081
+
+jwt:
+  secret: MSklaZmYkIyikKLPksjQEBkc2ZqZGZrZHNqQEAjZHNmZ2ZnZmdeXiYmWijkonjabhbahbdipeJSQkI2RzZHMkIyVzZD
+  expiration: 86400000
