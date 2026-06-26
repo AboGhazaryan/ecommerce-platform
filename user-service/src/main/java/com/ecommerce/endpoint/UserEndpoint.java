@@ -37,13 +37,13 @@ public class UserEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> changeUserById(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @Valid @RequestBody UserRequest userRequest,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
@@ -55,7 +55,7 @@ public class UserEndpoint {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -66,7 +66,7 @@ public class UserEndpoint {
 
     @PatchMapping("/{id}/block")
     public ResponseEntity<UserResponse> blockUser(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -76,7 +76,7 @@ public class UserEndpoint {
 
     @PatchMapping("/{id}/unblock")
     public ResponseEntity<UserResponse> unblockUser(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

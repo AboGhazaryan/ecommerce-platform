@@ -72,7 +72,7 @@ export class UserNotificationService implements OnDestroy {
       reconnectDelay: 5000,
       onConnect: () => {
         // subscribe to own notifications
-        this.stompClient!.subscribe(`/topic/notifications/${userId}`, msg => {
+        this.stompClient!.subscribe(`/user/queue/notifications`, msg => {
           const n: NotificationResponse = JSON.parse(msg.body);
           this.notifications.update(list => [n, ...list]);
         });

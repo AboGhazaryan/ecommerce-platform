@@ -27,14 +27,14 @@ public class OrderEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Integer id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("id") Integer id) {
         OrderResponse response = orderService.getOrderById(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable Integer userId) {
+    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") Integer userId) {
         List<OrderResponse> orders = orderService.getOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
     }
@@ -48,7 +48,7 @@ public class OrderEndpoint {
 
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@PathVariable OrderStatus status) {
+    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@PathVariable("status") OrderStatus status) {
         List<OrderResponse> orders = orderService.getOrdersByStatus(status);
         return ResponseEntity.ok(orders);
     }
@@ -56,8 +56,8 @@ public class OrderEndpoint {
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable Integer id,
-                                                           @RequestParam OrderStatus status) {
+    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable("id") Integer id,
+                                                           @RequestParam("status") OrderStatus status) {
         OrderResponse response = orderService.updateOrderStatus(id, status);
         return ResponseEntity.ok(response);
     }
@@ -70,7 +70,7 @@ public class OrderEndpoint {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteOrder(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteOrder(@PathVariable("id") Integer id) {
         orderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();
     }

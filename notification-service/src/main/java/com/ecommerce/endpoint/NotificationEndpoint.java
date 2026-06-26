@@ -18,7 +18,7 @@ public class NotificationEndpoint {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationResponse>> getNotificationsByUserId(
-            @PathVariable Integer userId,
+            @PathVariable("userId") Integer userId,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role) && !userId.equals(currentUserId)) {
@@ -29,7 +29,7 @@ public class NotificationEndpoint {
 
     @GetMapping("/type/{type}")
     public ResponseEntity<List<NotificationResponse>> getNotificationsByType(
-            @PathVariable NotificationType type,
+            @PathVariable("type") NotificationType type,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -48,7 +48,7 @@ public class NotificationEndpoint {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

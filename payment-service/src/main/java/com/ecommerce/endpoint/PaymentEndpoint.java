@@ -17,7 +17,7 @@ public class PaymentEndpoint {
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponse> getPaymentById(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         PaymentResponse payment = paymentService.getPaymentById(id);
@@ -29,7 +29,7 @@ public class PaymentEndpoint {
 
     @GetMapping("/order/{orderId}")
     public ResponseEntity<PaymentResponse> getPaymentByOrderId(
-            @PathVariable Integer orderId,
+            @PathVariable("orderId") Integer orderId,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         PaymentResponse payment = paymentService.getPaymentByOrderId(orderId);
@@ -41,7 +41,7 @@ public class PaymentEndpoint {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PaymentResponse>> getPaymentByUserid(
-            @PathVariable Integer userId,
+            @PathVariable("userId") Integer userId,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role) && !userId.equals(currentUserId)) {
@@ -52,7 +52,7 @@ public class PaymentEndpoint {
 
     @PostMapping("/{id}/refund")
     public ResponseEntity<PaymentResponse> refundPayment(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

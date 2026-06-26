@@ -34,7 +34,7 @@ public class ProductEndpoint {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(
-            @PathVariable int id,
+            @PathVariable("id") int id,
             @RequestHeader(value = "X-UserService-UserId", required = false) Integer userId,
             @RequestHeader(value = "X-UserService-Role", required = false) String role) {
         return ResponseEntity.ok(productService.getProductById(id, userId, role));
@@ -56,18 +56,18 @@ public class ProductEndpoint {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductResponse>> getAllProductsByCategory(@PathVariable ProductCategory category) {
+    public ResponseEntity<List<ProductResponse>> getAllProductsByCategory(@PathVariable("category") ProductCategory category) {
         return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProductResponse>> searchProductByName(@RequestParam String name) {
+    public ResponseEntity<List<ProductResponse>> searchProductByName(@RequestParam("name") String name) {
         return ResponseEntity.ok(productService.searchProductsByName(name));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable int id,
+            @PathVariable("id") int id,
             @Valid @RequestBody ProductRequest request,
             @RequestHeader("X-UserService-UserId") Integer userId,
             @RequestHeader("X-UserService-Role") String role) {
@@ -76,7 +76,7 @@ public class ProductEndpoint {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductById(
-            @PathVariable int id,
+            @PathVariable("id") int id,
             @RequestHeader("X-UserService-UserId") Integer userId,
             @RequestHeader("X-UserService-Role") String role) {
         productService.deleteProductById(id, userId, role);
@@ -85,15 +85,15 @@ public class ProductEndpoint {
 
     @PostMapping("/{id}/stock")
     public ResponseEntity<Void> decreaseStock(
-            @PathVariable Integer id,
-            @RequestParam Integer quantity) {
+            @PathVariable("id") Integer id,
+            @RequestParam("quantity") Integer quantity) {
         productService.decreaseStock(id, quantity);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/approve")
     public ResponseEntity<ProductResponse> approveProduct(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader("X-UserService-Role") String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -103,7 +103,7 @@ public class ProductEndpoint {
 
     @PatchMapping("/{id}/reject")
     public ResponseEntity<ProductResponse> rejectProduct(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestHeader("X-UserService-Role") String role) {
         if (!"ADMIN".equals(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

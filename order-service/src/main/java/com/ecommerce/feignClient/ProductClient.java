@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductClient {
 
     @GetMapping("/products/{id}")
-    ProductResponse getProductById(@PathVariable Integer id);
+    ProductResponse getProductById(@PathVariable("id") Integer id);
 
     @PostMapping("/products/{id}/stock")
-    void decreaseStock(@PathVariable Integer id, @RequestParam Integer quantity);
+    void decreaseStock(@PathVariable("id") Integer id, @RequestParam("quantity") Integer quantity);
 
 }

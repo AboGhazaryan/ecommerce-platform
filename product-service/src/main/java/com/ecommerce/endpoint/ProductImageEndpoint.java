@@ -18,20 +18,20 @@ public class ProductImageEndpoint {
 
     @PostMapping("/{id}/images")
     public ResponseEntity<List<ProductImageResponse>> uploadImages(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestParam("files") MultipartFile[] files) {
         return ResponseEntity.ok(productImageService.uploadImages(id, files));
     }
 
     @GetMapping("/{id}/images")
-    public ResponseEntity<List<ProductImageResponse>> getImages(@PathVariable Integer id) {
+    public ResponseEntity<List<ProductImageResponse>> getImages(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(productImageService.getImages(id));
     }
 
     @DeleteMapping("/{id}/images/{imageId}")
     public ResponseEntity<Void> deleteImage(
-            @PathVariable Integer id,
-            @PathVariable Integer imageId) {
+            @PathVariable("id") Integer id,
+            @PathVariable("imageId") Integer imageId) {
         productImageService.deleteImage(id, imageId);
         return ResponseEntity.noContent().build();
     }

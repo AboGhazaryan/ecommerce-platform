@@ -48,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationResponse adminDto = saveAndConvert(buildNotification(
                 adminId, adminEmail, adminMessage, NotificationType.ORDER_CREATED));
 
-        messagingTemplate.convertAndSend("/topic/notifications/" + event.getUserId(), userDto);
+        messagingTemplate.convertAndSendToUser(String.valueOf(event.getUserId()), "/queue/notifications", userDto);
         messagingTemplate.convertAndSend("/topic/notifications/admin", adminDto);
 
         emailService.sendEmail(event.getUserEmail(),
@@ -56,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
                 "Your order has been created․ Order ID: " + event.getOrderId() +
                         " Amount: " + event.getTotalPrice());
 
-        emailService.sendEmail(adminEmail, "New order",adminMessage);
+        emailService.sendEmail(adminEmail, "New order", adminMessage);
         log.info("Order notification saved for userId={}", event.getUserId());
     }
 
@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationResponse adminDto = saveAndConvert(
                 buildNotification(adminId, adminEmail, adminMessage, type));
 
-        messagingTemplate.convertAndSend("/topic/notifications/" + event.getUserId(), userDto);
+        messagingTemplate.convertAndSendToUser(String.valueOf(event.getUserId()),"/queue/notifications", userDto);
         messagingTemplate.convertAndSend("/topic/notifications/admin", adminDto);
 
         emailService.sendEmail(event.getUserEmail(), "Payment confirmation", userMessage);
