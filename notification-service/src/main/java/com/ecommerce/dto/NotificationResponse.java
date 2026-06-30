@@ -16,5 +16,6 @@ public class NotificationResponse {
     private String userEmail;
     private String message;
     private NotificationType type;
+    private Boolean isRead;
     private LocalDateTime createdAt;
 }

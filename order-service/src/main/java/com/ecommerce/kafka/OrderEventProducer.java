@@ -1,6 +1,6 @@
 package com.ecommerce.kafka;
 
-import com.ecommerce.dto.UserResponse;
+import com.ecommerce.dto.SellerResponse;
 import com.ecommerce.event.OrderEvent;
 import com.ecommerce.model.entity.Order;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class OrderEventProducer {
     private final KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
-    public void sendOrderEvent(Order order, UserResponse user) {
+    public void sendOrderEvent(Order order, SellerResponse user) {
         kafkaTemplate.send("order-created",
                 OrderEvent.builder()
                         .orderId(order.getId())

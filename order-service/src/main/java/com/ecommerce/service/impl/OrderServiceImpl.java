@@ -6,7 +6,6 @@ import com.ecommerce.dto.OrderRequest;
 import com.ecommerce.dto.OrderResponse;
 import com.ecommerce.exception.InsufficientStockException;
 import com.ecommerce.exception.OrderNotFoundException;
-import feign.FeignException;
 import com.ecommerce.feignClient.ProductClient;
 import com.ecommerce.feignClient.UserClient;
 import com.ecommerce.kafka.OrderEventProducer;
@@ -15,15 +14,17 @@ import com.ecommerce.model.OrderStatus;
 import com.ecommerce.model.entity.Order;
 import com.ecommerce.model.entity.OrderItem;
 import com.ecommerce.repository.OrderRepository;
-import com.ecommerce.sequrity.JwtService;
 import com.ecommerce.service.OrderService;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -32,14 +33,12 @@ public class OrderServiceImpl implements OrderService {
     private final ProductClient productClient;
     private final OrderEventProducer orderEventProducer;
     private final OrderMapper orderMapper;
-    private final JwtService jwtService;
     private final UserClient userClient;
 
     @Override
     @Transactional
-    public OrderResponse createOrder(OrderRequest orderRequest) {
-        Integer userId = jwtService.getCurrentUserId();
-        var user = userClient.getUserById(userId);
+    public OrderResponse createOrder(OrderRequest orderRequest, Integer userId) {
+        var user = userClient.getSellerInfoById(userId);
 
         List<OrderItem> items = orderRequest.getItems()
                 .stream()
@@ -108,8 +107,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderResponse> getCurrentUserOrders() {
-        Integer userId = jwtService.getCurrentUserId();
+    public List<OrderResponse> getCurrentUserOrders(Integer userId) {
         return orderRepository.findByUserId(userId)
                 .stream()
                 .map(this::toEnrichedResponse)
@@ -141,12 +139,16 @@ public class OrderServiceImpl implements OrderService {
             builder.productName(product.getName());
             if (product.getUserId() != null) {
                 try {
-                    var seller = userClient.getUserById(product.getUserId());
+                    var seller = userClient.getSellerInfoById(product.getUserId());
                     builder.sellerName(seller.getName())
-                           .sellerSurname(seller.getSurname());
-                } catch (FeignException.NotFound ignored) {}
+                            .sellerSurname(seller.getSurname());
+                } catch (FeignException e) {
+                    log.warn("Could not fetch seller info for userId={}: {}",
+                            product.getUserId(), e.getMessage());
+                }
             }
-        } catch (FeignException.NotFound ignored) {}
+        } catch (FeignException.NotFound ignored) {
+        }
         return builder.build();
     }
 
@@ -154,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
         var product = productClient.getProductById(itemRequest.getProductId());
         if (product.getQuantity() < itemRequest.getQuantity()) {
             throw new InsufficientStockException(
-                "Not enough stock for product");
+                    "Not enough stock for product");
         }
         productClient.decreaseStock(itemRequest.getProductId(), itemRequest.getQuantity());
         OrderItem item = orderMapper.toEntity(itemRequest);

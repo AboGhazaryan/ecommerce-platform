@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,56 +20,86 @@ public class OrderEndpoint {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest){
-        OrderResponse response = orderService.createOrder(orderRequest);
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderRequest,
+                                                     @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId) {
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        OrderResponse response = orderService.createOrder(orderRequest, currentUserId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("id") Integer id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable("id") Integer id,
+                                                      @RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId,
+                                                      @RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         OrderResponse response = orderService.getOrderById(id);
+        if (!"ADMIN".equals(role) && !response.getUserId().equals(currentUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") Integer userId) {
+    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") Integer userId,
+                                                                 @RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         List<OrderResponse> orders = orderService.getOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/my-orders")
-    public ResponseEntity<List<OrderResponse>> getMyOrders() {
-        List<OrderResponse> orders = orderService.getCurrentUserOrders();
+    public ResponseEntity<List<OrderResponse>> getMyOrders(@RequestHeader(value = "X-UserService-UserId", required = false) Integer currentUserId) {
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<OrderResponse> orders = orderService.getCurrentUserOrders(currentUserId);
         return ResponseEntity.ok(orders);
     }
 
 
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@PathVariable("status") OrderStatus status) {
+    public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@PathVariable("status") OrderStatus status,
+                                                                 @RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         List<OrderResponse> orders = orderService.getOrdersByStatus(status);
         return ResponseEntity.ok(orders);
     }
 
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable("id") Integer id,
-                                                           @RequestParam("status") OrderStatus status) {
+                                                           @RequestParam("status") OrderStatus status,
+                                                           @RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         OrderResponse response = orderService.updateOrderStatus(id, status);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+    public ResponseEntity<List<OrderResponse>> getAllOrders(@RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteOrder(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> deleteOrder(@PathVariable("id") Integer id,
+                                         @RequestHeader(value = "X-UserService-Role", required = false) String role) {
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         orderService.deleteOrderById(id);
         return ResponseEntity.noContent().build();
     }

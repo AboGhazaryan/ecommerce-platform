@@ -8,6 +8,7 @@ export interface NotificationResponse {
   userEmail: string;
   message: string;
   type: string;
+  isRead: boolean;
   createdAt: string;
 }
 
@@ -38,5 +39,13 @@ export class AdminService {
 
   getAllPayments(): Observable<PaymentResponse[]> {
     return this.http.get<PaymentResponse[]>(this.paymentUrl);
+  }
+
+  markAsRead(id: number): Observable<NotificationResponse> {
+    return this.http.patch<NotificationResponse>(`${this.notifUrl}/${id}/read`, {});
+  }
+
+  markAllAsRead(): Observable<NotificationResponse[]> {
+    return this.http.patch<NotificationResponse[]>(`${this.notifUrl}/read-all`, {});
   }
 }

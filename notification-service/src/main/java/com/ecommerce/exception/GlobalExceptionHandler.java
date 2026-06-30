@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiExceptionResponse(e.getMessage()));
     }
+
+    @ExceptionHandler(NotificationAccessDeniedException.class)
+    public ResponseEntity<ApiExceptionResponse> handleAccessDeniedException(NotificationAccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiExceptionResponse(e.getMessage()));
+    }
 }

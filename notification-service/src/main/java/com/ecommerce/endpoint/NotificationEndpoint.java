@@ -46,6 +46,27 @@ public class NotificationEndpoint {
         return ResponseEntity.ok(notificationService.getAllNotifications());
     }
 
+
+    @PatchMapping("/{id}/read")
+    public ResponseEntity<NotificationResponse> markAsRead(
+            @PathVariable("id") Integer id,
+            @RequestHeader("X-UserService-UserId") Integer currentUserId,
+            @RequestHeader(value = "X-UserService-Role", required = false) String role){
+        if (currentUserId == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(notificationService.markAsRead(id, currentUserId, role));
+    }
+
+    @PatchMapping("/read-all")
+    public ResponseEntity<List<NotificationResponse>> markAllAsRead(
+            @RequestHeader("X-UserService-UserId") Integer currentUserId){
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(notificationService.markAllAsRead(currentUserId));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(
             @PathVariable("id") Integer id,

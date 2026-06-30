@@ -23,4 +23,8 @@ public interface NotificationService {
     List<NotificationResponse> getAllNotifications();
 
     void deleteNotification(Integer id);
+
+    NotificationResponse markAsRead(Integer id, Integer currentId, String role);
+
+    List<NotificationResponse> markAllAsRead(Integer userId);
 }

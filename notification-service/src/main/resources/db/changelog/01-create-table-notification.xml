@@ -22,6 +22,9 @@
             <column name="type" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+            <column name="is_read" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_at" type="TIMESTAMP" >
                 <constraints nullable="false"/>
             </column>

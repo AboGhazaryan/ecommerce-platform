@@ -4,6 +4,7 @@ import com.ecommerce.dto.NotificationResponse;
 import com.ecommerce.event.OrderEvent;
 import com.ecommerce.event.PaymentEvent;
 import com.ecommerce.event.ProductEvent;
+import com.ecommerce.exception.NotificationAccessDeniedException;
 import com.ecommerce.exception.NotificationNotFoundException;
 import com.ecommerce.mapper.NotificationMapper;
 import com.ecommerce.model.NotificationType;
@@ -83,7 +84,7 @@ public class NotificationServiceImpl implements NotificationService {
         NotificationResponse adminDto = saveAndConvert(
                 buildNotification(adminId, adminEmail, adminMessage, type));
 
-        messagingTemplate.convertAndSendToUser(String.valueOf(event.getUserId()),"/queue/notifications", userDto);
+        messagingTemplate.convertAndSendToUser(String.valueOf(event.getUserId()), "/queue/notifications", userDto);
         messagingTemplate.convertAndSend("/topic/notifications/admin", adminDto);
 
         emailService.sendEmail(event.getUserEmail(), "Payment confirmation", userMessage);
@@ -144,6 +145,28 @@ public class NotificationServiceImpl implements NotificationService {
             throw new NotificationNotFoundException("Notification not found: " + id);
         }
         notificationsRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public NotificationResponse markAsRead(Integer id, Integer currentId, String role) {
+        Notification notification = notificationsRepository.findById(id)
+                .orElseThrow(() -> new NotificationNotFoundException("Notification not found"));
+        if (!"ADMIN".equals(role) && !notification.getUserId().equals(currentId)) {
+            throw new NotificationAccessDeniedException("Access Denied ");
+        }
+        notification.setRead(true);
+        return notificationMapper.toResponse(notificationsRepository.save(notification));
+    }
+
+    @Override
+    @Transactional
+    public List<NotificationResponse> markAllAsRead(Integer userId) {
+        notificationsRepository.markAllAsRead(userId);
+        return notificationsRepository.findByUserIdOrderByCreatedAtDesc(userId)
+                .stream()
+                .map(notificationMapper::toResponse)
+                .toList();
     }
 
     private Notification buildNotification(Integer userId, String email,

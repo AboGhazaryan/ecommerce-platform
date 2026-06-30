@@ -1,5 +1,6 @@
 package com.ecommerce.service;
 
+import com.ecommerce.dto.SellerResponse;
 import com.ecommerce.dto.UserRequest;
 import com.ecommerce.dto.UserResponse;
 
@@ -12,6 +13,8 @@ public interface UserService {
     List<UserResponse> getAllUsers();
 
     UserResponse getUserById(Integer id);
+
+    SellerResponse getSellerInfoById(Integer id);
 
     UserResponse changeUserById(Integer id, UserRequest dto);
 

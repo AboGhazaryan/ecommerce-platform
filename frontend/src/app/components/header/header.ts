@@ -77,7 +77,7 @@ export class Header {
     if (next) {
       // capture which IDs are new before marking all read, so highlights stay visible
       this.openedNewIds.set(new Set(this.notifs.newIds()));
-      this.notifs.markAllRead();
+      this.notifs.markAllAsRead();
     }
   }
 

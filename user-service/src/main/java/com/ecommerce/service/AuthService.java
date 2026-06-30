@@ -34,7 +34,6 @@ public class AuthService {
         String token = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(token)
-                .userId(user.getId())
                 .build();
     }
 }

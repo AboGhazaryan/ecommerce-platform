@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrderResponse createOrder(OrderRequest orderRequest);
+    OrderResponse createOrder(OrderRequest orderRequest,Integer userId);
 
     OrderResponse getOrderById(Integer id);
 
     List<OrderResponse> getOrdersByUserId(Integer userId);
 
-    List<OrderResponse> getCurrentUserOrders();
+    List<OrderResponse> getCurrentUserOrders(Integer userId);
 
     List<OrderResponse> getOrdersByStatus(OrderStatus status);
 

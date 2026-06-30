@@ -30,7 +30,8 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NotificationType type;
-
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead = false;
     @CreationTimestamp
     @Column(name="created_at",updatable = false)
     private LocalDateTime createdAt;
